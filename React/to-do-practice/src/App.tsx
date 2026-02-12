@@ -1,34 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useRef,useState } from 'react'
+import './index.css'
+import Input from './components/input.tsx'
+import Task from './components/task.tsx'
+interface Task {
+  id: number;
+  text: string;
+}
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: React.FC = () => {
+  const [userInput, setUserInput] = useState("");
+  const [list, setList] = useState<Task[]>([]);
+  const nextId = useRef(1);
 
+  const addTask = () => {
+    const text = userInput.trim();
+    if (text.length === 0) return;
+    setList([...list, { id: nextId.current++, text }]);
+    setUserInput("");
+  }
+
+  const deleteTask = (id: number) => {
+    setList(list.filter((task) => task.id !== id));
+  }
+
+  const updateTask = (id: number, newText: string) => {
+    setList((prev) => prev.map((t) => (t.id === id ? { ...t, text: newText } : t)));
+  }
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="w-full max-w-md mx-auto mt-10 p-4 bg-gray-100 rounded">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-2xl font-bold mb-4">To-Do List</h1>
+        <div className="mb-4">
+          <Input
+            value={userInput}
+            onChange={setUserInput}
+            onAdd={addTask}
+          />
+        </div>
+
+        <div className="space-y-2">
+          {list.length === 0 ? (
+            <div className="text-center text-red-500">No tasks yet. Add one above!</div>
+          ) : (
+            list.map((task) => (
+              <div key={task.id} className="shrink-0">
+              <Task
+                task={task}
+                onDelete={deleteTask}
+                onUpdate={updateTask}
+              />
+              </div>
+            ))
+          )}
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
