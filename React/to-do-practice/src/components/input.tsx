@@ -1,14 +1,25 @@
 type Props = {
-    onTextChange(value: string): void;
-    text: string;
+    value: string;
+    onChange: (s:string) => void;
+    onAdd: () => void;
+
 }
 
-export default function Input (props: Props) {
-    
+const Input = ({value, onChange, onAdd}: Props) => {
     return (
-        <>
-            <input className="flex mx-auto border-blue-500 bg-amber-100" type="text" value={props.text} onChange={(e) => props.onTextChange(e.target.value)}  />
-            <button className="flex mx-auto border-blue-500 bg-slate-700 text-white" onClick={() => props.onTextChange("")}>Add Task</button>
-        </>
-    );
+        <div className="flex justify-between items-center">
+            <input 
+                value={value}
+                className="bg-amber-700"
+                onChange={(e) => onChange(e.target.value)}
+            >
+            </input>
+            <button className="bg-violet-700" onClick={onAdd}>
+                Add
+            </button>
+        </div>
+    )
 }
+
+
+export default Input;

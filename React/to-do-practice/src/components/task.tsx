@@ -1,13 +1,22 @@
+interface TaskItem {
+    id: number;
+    text: string;
+}
+
 type Props = {
-    key: number;
-    name: string;
-
+    task: TaskItem;
+    onDelete: (id:number) => void;
 }
 
-export default function Task (props: Props) {
+const Task = ({task, onDelete}: Props) => {
     return (
-        <>
-            <div className="border border-blue-500 bg-amber-100 p-2 m-2 rounded-md">{props.name}</div>
-        </>
-    );
+        <div className="flex justify-between items-center">
+            <p>{task.text}</p>
+            <button className="bg-blue-600" onClick={() => onDelete(task.id) }>
+                Delete
+            </button>
+        </div>
+    )
 }
+
+export default Task;
